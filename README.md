@@ -2,13 +2,13 @@ PHP VoltDB Client Wrapper
 =========================
 json interface support.
 
-**future**
+**future**  
 voltDB SQL support  
 voltDB stored procedure  
 voltDB schema builder  
 
 #usage
-##use voltdb json API(simple)
+##voltdb json API(simple)
 **use curl**
 ```php
 $client = new \Ytake\VoltDB\Client;

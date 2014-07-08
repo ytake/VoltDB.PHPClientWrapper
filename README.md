@@ -11,7 +11,12 @@ async
 
 #install
 ```json
-
+    "require": {
+        "php": ">=5.4.0",
+        "ext-curl": "*",
+	    "ext-voltdb": "*",
+        "ytake/voltdb-client-wrapper": "*"
+    },
 ```
 
 #usage

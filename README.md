@@ -16,12 +16,12 @@ async
 ```php
 $client = new \Ytake\VoltDB\Client(new \Ytake\VoltDB\Parse);
 // get request
-$result = $client->request('http://localhost')->get(['Procedure' => 'allUser']);
+$result = $client->request('http://localhost')->get(['Procedure' => 'allUser'])->getResult();
 // post request
 $result = $client->request('http://localhost')->post([
     'Procedure' => 'addUser',
     'Parameters' => [1, "voltdb"]
-]);
+])->getResult();
 ```
 ###use parameters
 [JSON HTTP Interface](http://voltdb.com/docs/UsingVoltDB/ProgLangJson.php)  

@@ -1,20 +1,68 @@
 PHP VoltDB Client Wrapper
 =========================
-json interface support.
+client wrapper / json interface support.
 
-**future**  
-voltDB SQL support  
-voltDB stored procedure  
-voltDB schema builder  
+**future**
+async
+
+#install
+```json
+
+```
 
 #usage
-##voltdb json API(simple)
+##VoltDB json API(simple)
 **use curl**
 ```php
-$client = new \Ytake\VoltDB\Client;
+$client = new \Ytake\VoltDB\Client(new \Ytake\VoltDB\Parse);
 // get request
-$result = $client->access('http://localhost')->get(['Procedure' => 'allUser']);
+$result = $client->request('http://localhost')->get(['Procedure' => 'allUser']);
 // post request
-$result = $client->access('http://localhost')->post(['Procedure' => 'addUser', [1, "voltdb"]]);
+$result = $client->request('http://localhost')->post([
+    'Procedure' => 'addUser',
+    'Parameters' => [1, "voltdb"]
+]);
+```
+###use parameters
+[JSON HTTP Interface](http://voltdb.com/docs/UsingVoltDB/ProgLangJson.php)
+same arguments
+```php
+// procedure-name
+'Procedure' => null,
+// procedure-parameters
+'Parameters' => null,
+// username for authentication
+'User' => null,
+// password for authentication
+'Password' => null,
+// Hashed password for authentication
+'Hashedpassword' => null,
+// true|false
+'admin' => false,
+// function-name
+'jsonp' => null
+```
+###get SystemInformation
+```php
+// default "OVERVIEW"
+$client->request('http://localhost')->info()->getResult();
+// DEVELOPMENT
+$client->request('http://localhost')->info("DEPLOYMENT")->getResult();
+```
+
+##VoltClient wrapper
+###AdHoc Queries
+```php
+$connection = new \Ytake\VoltDB\Connection(new \Ytake\VoltDB\Parse);
+$connection->select("SELECT * FROM users")
+```
+**not support prepared statements**
+JDBC driver supports
+or procedure
+
+###Stored Procedure
+```php
+$connection = new \Ytake\VoltDB\Connection(new \Ytake\VoltDB\Parse);
+$connection->procedure("Procedure-Name"));
 ```
 

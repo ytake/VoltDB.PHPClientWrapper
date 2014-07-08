@@ -2,7 +2,7 @@ PHP VoltDB Client Wrapper
 =========================
 client wrapper / json interface support.
 
-**future**
+**future**  
 async
 
 #install
@@ -12,7 +12,7 @@ async
 
 #usage
 ##VoltDB json API(simple)
-**use curl**
+**use curl**  
 ```php
 $client = new \Ytake\VoltDB\Client(new \Ytake\VoltDB\Parse);
 // get request
@@ -24,7 +24,7 @@ $result = $client->request('http://localhost')->post([
 ]);
 ```
 ###use parameters
-[JSON HTTP Interface](http://voltdb.com/docs/UsingVoltDB/ProgLangJson.php)
+[JSON HTTP Interface](http://voltdb.com/docs/UsingVoltDB/ProgLangJson.php)  
 same arguments
 ```php
 // procedure-name
@@ -56,8 +56,8 @@ $client->request('http://localhost')->info("DEPLOYMENT")->getResult();
 $connection = new \Ytake\VoltDB\Connection(new \Ytake\VoltDB\Parse);
 $connection->select("SELECT * FROM users")
 ```
-**not support prepared statements**
-JDBC driver supports
+**not support prepared statements**  
+JDBC driver supports  
 or procedure
 
 ###Stored Procedure

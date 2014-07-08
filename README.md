@@ -59,9 +59,9 @@ $client->request('http://localhost')->info("DEPLOYMENT")->getResult();
 $connection = new \Ytake\VoltDB\Connection(new \Ytake\VoltDB\Parse);
 $connection->select("SELECT * FROM users")
 ```
-**not support prepared statements**  
-JDBC driver supports  
-or procedure
+**not supported prepared statements**  
+JDBC driver(java) supports  
+or stored procedure(DDL)
 
 ###Stored Procedure
 ```php

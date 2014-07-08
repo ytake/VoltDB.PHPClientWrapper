@@ -2,6 +2,10 @@ PHP VoltDB Client Wrapper
 =========================
 client wrapper / json interface support.
 
+**required php-extension**  
+curl  
+[voltdb](https://github.com/VoltDB/voltdb-client-php)
+
 **future**  
 async
 
@@ -12,7 +16,6 @@ async
 
 #usage
 ##VoltDB json API(simple)
-**use curl**  
 ```php
 $client = new \Ytake\VoltDB\Client(new \Ytake\VoltDB\Parse);
 // get request

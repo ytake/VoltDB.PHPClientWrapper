@@ -16,7 +16,7 @@ async
         "php": ">=5.4.0",
         "ext-curl": "*",
         "ext-voltdb": "*",
-        "ytake/voltdb-client-wrapper": "*"
+        "ytake/voltdb-client-wrapper": "0.*"
     },
 ```
 

@@ -113,7 +113,7 @@ class Client
         $merge = array_merge($this->apiParams, $params);
         $params = $this->buildQuery($merge);
         curl_setopt($this->curl, CURLOPT_URL, "{$this->url}?{$params}");
-        return $this->getResult($this->exec());
+        return $this->exec();
     }
 
     /**
@@ -127,7 +127,7 @@ class Client
         $merge = array_merge($this->apiParams, $params);
         $params = $this->buildQuery($merge);
         curl_setopt($this->curl, CURLOPT_POSTFIELDS, $params);
-        return $this->getResult($this->exec());
+        return $this->exec();
     }
 
     /**

@@ -2,7 +2,7 @@ PHP VoltDB Client Wrapper
 =========================
 client wrapper / json interface support.
 
-[![Latest Stable Version](https://poser.pugx.org/ytake/voltdb-client-wrapper/v/stable.svg)](https://packagist.org/packages/ytake/voltdb-client-wrapper) [![Total Downloads](https://poser.pugx.org/ytake/voltdb-client-wrapper/downloads.svg)](https://packagist.org/packages/ytake/voltdb-client-wrapper) [![Latest Unstable Version](https://poser.pugx.org/ytake/voltdb-client-wrapper/v/unstable.svg)](https://packagist.org/packages/ytake/voltdb-client-wrapper) [![License](https://poser.pugx.org/ytake/voltdb-client-wrapper/license.svg)](https://packagist.org/packages/ytake/voltdb-client-wrapper)
+[![Latest Stable Version](https://poser.pugx.org/ytake/voltdb-client-wrapper/v/stable.svg)](https://packagist.org/packages/ytake/voltdb-client-wrapper) [![Total Downloads](https://poser.pugx.org/ytake/voltdb-client-wrapper/downloads.svg)](https://packagist.org/packages/ytake/voltdb-client-wrapper) [![Latest Unstable Version](https://poser.pugx.org/ytake/voltdb-client-wrapper/v/unstable.svg)](https://packagist.org/packages/ytake/voltdb-client-wrapper) [![License](https://poser.pugx.org/ytake/voltdb-client-wrapper/license.svg)](https://packagist.org/packages/ytake/voltdb-client-wrapper)  
 **required php-extension**  
 curl  
 [voltdb](https://github.com/VoltDB/voltdb-client-php)

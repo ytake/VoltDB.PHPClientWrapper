@@ -29,14 +29,17 @@ class Client
     /** @var bool ssl access */
     protected $ssl = false;
 
-    /** @var  \stdClass  */
-    private $result;
-
     /** @var string url */
     private $url = null;
 
     /** @var resource  a cURL handle on success, false on errors. */
     private $curl;
+
+    /** @var \stdClass  result */
+    private $result;
+
+    /** @var string cipher */
+    private $cipher = null;
 
     /**
      * string url arguments
@@ -59,6 +62,18 @@ class Client
         'jsonp' => null
     ];
 
+    /** @var ParseInterface */
+    protected $parse;
+
+    /**
+     * @param ParseInterface $parse
+     */
+    public function __construct(ParseInterface $parse)
+    {
+        $this->parse = $parse;
+    }
+
+
     /**
      * voltdb http/ json interface api access
      * wrapper, curl client
@@ -68,7 +83,7 @@ class Client
      * @param null $path
      * @return $this
      */
-    public function access($host = null, $port = 8080, $ssl = false, $path = null)
+    public function request($host = null, $port = 8080, $ssl = false, $path = null)
     {
         $this->host = (!is_null($host)) ? $host : $this->host;
         $this->apiPort = (!is_null($port)) ? $port : $this->apiPort;
@@ -99,6 +114,12 @@ class Client
         curl_setopt($this->curl, CURLOPT_FAILONERROR, 1);
         curl_setopt($this->curl, CURLOPT_RETURNTRANSFER, true);
 
+        if($this->ssl) {
+            curl_setopt($this->curl, CURLOPT_SSLVERSION, 3);
+        }
+        if($this->cipher) {
+            curl_setopt($this->curl, CURLOPT_SSL_CIPHER_LIST, $this->cipher);
+        }
         return $this;
     }
 
@@ -113,7 +134,7 @@ class Client
         $merge = array_merge($this->apiParams, $params);
         $params = $this->buildQuery($merge);
         curl_setopt($this->curl, CURLOPT_URL, "{$this->url}?{$params}");
-        return $this->getResult($this->exec());
+        return $this->exec();
     }
 
     /**
@@ -127,31 +148,22 @@ class Client
         $merge = array_merge($this->apiParams, $params);
         $params = $this->buildQuery($merge);
         curl_setopt($this->curl, CURLOPT_POSTFIELDS, $params);
-        return $this->getResult($this->exec());
+        return $this->exec();
     }
 
     /**
-     * return api result
-     *
-     *  object(stdClass)
-     *      int     status // status response
-     *      array   schema  // column
-     *      array   data    // return data
-     * @param \stdClass $object
-     * @return null|\stdClass
+     * get SystemInformation / default OVERVIEW
+     * @param string $component
+     * @return mixed|\stdClass
      */
-    public function getResult(\stdClass $object)
+    public function info($component = "OVERVIEW")
     {
-        //
-        if(!$object->status) {
-            return null;
-        }
-        $result = $object->results[0];
-        // no data
-        if(!count($result->data)) {
-            return null;
-        }
-        return $result;
+        $this->init();
+        $this->apiParams['Procedure'] = SystemProcedure::SYSTEM_INFO;
+        $this->apiParams['Parameters'] = [$component];
+        $params = $this->buildQuery($this->apiParams);
+        curl_setopt($this->curl, CURLOPT_URL, "{$this->url}?{$params}");
+        return $this->exec();
     }
 
     /**
@@ -189,7 +201,8 @@ class Client
             throw new Exception\ApiClientErrorException(curl_error($this->curl), curl_errno($this->curl));
         }
         curl_close($this->curl);
-        return json_decode($result);
+        $this->result = $this->parse->getResult(json_decode($result));
+        return $this;
     }
 
     /**
@@ -206,5 +219,36 @@ class Client
     public function getParam()
     {
         return $this->apiParams;
+    }
+
+    /**
+     * @return \stdClass
+     */
+    public function getResult()
+    {
+        return $this->result;
+    }
+
+    /**
+     * @todo
+     *
+     * @param string $cipher
+     * @return void
+     */
+    public function setCipher($cipher = null)
+    {
+        if(!is_null($cipher)) {
+            $this->cipher = $cipher;
+        }
+    }
+
+    /**
+     * @todo
+     *
+     * @return string
+     */
+    public function getCipher()
+    {
+        return $this->cipher;
     }
 }

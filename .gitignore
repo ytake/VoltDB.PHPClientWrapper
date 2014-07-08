@@ -1,2 +1,9 @@
 .idea
 vendor
+composer.lock
+composer.phar
+tests/schema/log
+tests/schema/statement-plans
+tests/schema/voltdbroot
+tests/schema/catalog.jar
+tests/schema/catalog-report.html

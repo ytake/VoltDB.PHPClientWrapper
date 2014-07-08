@@ -1,7 +1,7 @@
 {
     "name": "ytake/voltdb-client-wrapper",
     "description": "voltdb client wrapper",
-    "keywords": ["voltdb", "nosql", "rdbms", "api", "json"],
+    "keywords": ["voltdb", "newsql", "rdbms", "api", "json"],
     "license": "MIT",
     "authors": [
         {
@@ -11,13 +11,11 @@
     ],
     "require": {
         "php": ">=5.4.0",
-        "ext-curl": "*"
+        "ext-curl": "*",
+        "ext-voltdb": "*"
     },
     "require-dev": {
         "phpunit/phpunit": "3.7.*"
-    },
-    "suggest" :{
-        "ext-voltdb": "*"
     },
     "autoload" :{
         "psr-4" :{

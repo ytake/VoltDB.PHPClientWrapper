@@ -6,7 +6,6 @@ php:
   - 5.6
   
 before_script:
-  - sudo apt-get install ant
   - git clone https://github.com/VoltDB/voltdb.git
   - cd voltdb
   - ant 

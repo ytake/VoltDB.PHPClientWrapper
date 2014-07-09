@@ -6,15 +6,16 @@ php:
   - 5.6
   
 before_script:
-　- git clone https://github.com/VoltDB/voltdb.git
-　- cd voltdb
-　- ant 
-　- cd ..
-　- git clone -b noexceptions https://github.com/VoltDB/voltdb-client-cpp.git
-　- cd voltdb-client-cpp
-　- make
+  - git clone https://github.com/VoltDB/voltdb.git
+  - cd voltdb
+  - ant 
+  - cd ..
+  - git clone -b noexceptions https://github.com/VoltDB/voltdb-client-cpp.git
+  - cd voltdb-client-cpp
+  - make
   - curl -s http://getcomposer.org/installer | php
   - php composer.phar install --dev
+
 script: phpunit
 
 notifications:

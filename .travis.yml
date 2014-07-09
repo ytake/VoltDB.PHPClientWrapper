@@ -3,8 +3,7 @@ php:
   - 5.4
   - 5.5
   - 5.6
-  - hhvm
-
+  
 before_script:
 　- git clone https://github.com/VoltDB/voltdb.git
 　- cd voltdb

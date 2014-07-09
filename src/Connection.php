@@ -129,12 +129,11 @@ class Connection
      *
      * voltdb is not support in the prepared statement(not support PDO driver)
      * @param string $query
-     * @param array $bindings
      * @return array|void
      *
      * @see http://voltdb.com/docs/UsingVoltDB/sysprocadhoc.php
      */
-    public function select($query, $bindings = [])
+    public function select($query)
     {
         $response = $this->voltdbClient->invoke(SystemProcedure::AD_HOC, [$query]);
         return $this->getResult($response);
@@ -145,12 +144,11 @@ class Connection
      *
      * voltdb is not support in the prepared statement(not support PDO driver)
      * @param string $query
-     * @param array $bindings
      * @return array|void
      *
      * @see http://voltdb.com/docs/UsingVoltDB/sysprocadhoc.php
      */
-    public function selectOne($query, $bindings = [])
+    public function selectOne($query)
     {
         $response = $this->voltdbClient->invoke(SystemProcedure::AD_HOC, [$query]);
         $result = $this->getResult($response);

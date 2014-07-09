@@ -2,11 +2,6 @@ language: php
 
 php:
   - 5.4
-  - 5.5
-  - 5.6
-
-install: 
-- "if [ \"$CXX\" = \"g++\" ]; then echo \"using gcc : 4.8 : g++-4.8 ;\" > ~/user-config.jam; fi"
 
 before_script:
   - git clone https://github.com/VoltDB/voltdb.git

@@ -13,7 +13,8 @@ before_script:
   - git clone -b native https://github.com/VoltDB/voltdb-client-php.git
   - cd voltdb-client-php
   - phpize
-  - ./configure --with-voltdb=../voltdb-client-cpp && make
+  - ./configure --with-voltdb=../voltdb-client-cpp
+  - make
   - echo "extension=voltdb.so" > voltdb.ini && phpenv config-add voltdb.ini
   - curl -s http://getcomposer.org/installer | php
   - php composer.phar install --dev

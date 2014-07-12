@@ -1,22 +1,22 @@
 <?php
 
 /**
- * Class ClientTest
+ * Class HttpClientTest
  * @author yuuki.takezawa<yuuki.takezawa@comnect.jp.net>
  */
-class ClientTest extends PHPUnit_Framework_TestCase
+class HttpClientTest extends PHPUnit_Framework_TestCase
 {
-    /** @var Ytake\VoltDB\Client */
+    /** @var Ytake\VoltDB\HttpClient */
     protected $client;
 
     public function setUp()
     {
-        $this->client = new \Ytake\VoltDB\Client(new \Ytake\VoltDB\Parse);
+        $this->client = new \Ytake\VoltDB\HttpClient(new \Ytake\VoltDB\Parse);
     }
 
     public function testInstance()
     {
-        $this->assertInstanceOf("Ytake\\VoltDB\\Client", $this->client);
+        $this->assertInstanceOf("Ytake\\VoltDB\\HttpClient", $this->client);
     }
 
     public function testInsert()

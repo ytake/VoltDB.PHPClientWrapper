@@ -12,7 +12,8 @@
     "require": {
         "php": ">=5.4.0",
         "ext-curl": "*",
-        "ext-voltdb": "*"
+        "ext-voltdb": "0.1",
+        "ytake/voltdb-client-wrapper": "*"
     },
     "require-dev": {
         "phpunit/phpunit": "3.7.*"
@@ -22,5 +23,5 @@
             "Ytake\\VoltDB\\": "src"
         }
     },
-    "minimum-stability": "dev"
+    "minimum-stability": "stable"
 }

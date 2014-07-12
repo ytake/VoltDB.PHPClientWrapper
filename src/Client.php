@@ -4,251 +4,256 @@
  *
  * @author yuuki.takezawa<yuuki.takezawa@comnect.jp.net>
  * @license http://opensource.org/licenses/MIT MIT
- *
+ * @see https://voltdb.com/docs/UsingVoltDB/
  */
 namespace Ytake\VoltDB;
 
+use VoltClient;
+use VoltInvocationResponse;
+use Ytake\VoltDB\Exception\ResponseErrorException;
+use Ytake\VoltDB\Exception\ConnectionErrorException;
+use Ytake\VoltDB\Exception\MethodNotSupportedException;
+
 /**
  * Class Client
- * @package Ytake\VoltDB
+ * @package Ytake\LaravelVoltDB
  * @author yuuki.takezawa<yuuki.takezawa@comnect.jp.net>
  * @license http://opensource.org/licenses/MIT MIT
  */
 class Client
 {
 
-    /** @var string  host */
-    protected $host = "localhost"; // default
+    /** @var string  localhost */
+    protected $host = 'localhost';
 
-    /** @var string  api path */
-    protected $path = "/api/1.0/";
+    /** @var int  connect port */
+    protected $port = 21212;
 
-    /** @var int json interface port */
-    protected $apiPort = 8080; // default port
+    /** @var null  */
+    protected $username = null;
 
-    /** @var bool ssl access */
-    protected $ssl = false;
+    /** @var null  */
+    protected $password = null;
 
-    /** @var string url */
-    private $url = null;
+    /** @var array configure */
+    protected $config = [];
 
-    /** @var resource  a cURL handle on success, false on errors. */
-    private $curl;
-
-    /** @var \stdClass  result */
-    private $result;
-
-    /** @var string cipher */
-    private $cipher = null;
-
-    /**
-     * string url arguments
-     */
-    /** @var array  */
-    private $apiParams = [
-        // procedure-name
-        'Procedure' => null,
-        // procedure-parameters
-        'Parameters' => null,
-        // username for authentication
-        'User' => null,
-        // password for authentication
-        'Password' => null,
-        // Hashed password for authentication
-        'Hashedpassword' => null,
-        // true|false
-        'admin' => false,
-        // function-name
-        'jsonp' => null
-    ];
+    /** @var VoltClient */
+    protected $client;
 
     /** @var ParseInterface */
     protected $parse;
 
+    /** @var resource */
+    protected $resource;
+
     /**
+     * @param VoltClient $client
      * @param ParseInterface $parse
      */
-    public function __construct(ParseInterface $parse)
+    public function __construct(VoltClient $client, ParseInterface $parse)
     {
+        // result parser
         $this->parse = $parse;
-    }
 
-
-    /**
-     * voltdb http/ json interface api access
-     * wrapper, curl client
-     * @param null $host
-     * @param int $port
-     * @param bool $ssl
-     * @param null $path
-     * @return $this
-     */
-    public function request($host = null, $port = 8080, $ssl = false, $path = null)
-    {
-        $this->host = (!is_null($host)) ? $host : $this->host;
-        $this->apiPort = (!is_null($port)) ? $port : $this->apiPort;
-        $this->path = (!is_null($path)) ? $path : $this->path;
-        $parsed = parse_url($this->host);
-
-        $this->ssl = ($ssl) ? $ssl : $this->ssl;
-        $protocol = (!$this->ssl) ? "http" : "https";
-
-        if(isset($parsed['scheme'])) {
-            $protocol = $parsed['scheme'];
-            $this->host = $parsed['host'];
-            $this->ssl = ($parsed['scheme'] === 'http') ? false : true;
-        }
-        $this->url = "{$protocol}://{$this->host}:{$this->apiPort}{$this->path}";
-        return $this;
+        // get VoltDB Client
+        $this->client = $client;
     }
 
     /**
-     * initialize curl client
+     * connect to voltdb
+     * @param array $config
      * @return $this
+     * @throws Exception\ConnectionErrorException
      */
-    protected function init()
+    public function connect(array $config = [])
     {
-        $this->curl = curl_init();
-        curl_setopt($this->curl, CURLOPT_URL, $this->url);
-        curl_setopt($this->curl, CURLOPT_HEADER, 0);
-        curl_setopt($this->curl, CURLOPT_FAILONERROR, 1);
-        curl_setopt($this->curl, CURLOPT_RETURNTRANSFER, true);
+        $config = [
+            'host' => (isset($config['host'])) ? $config['host'] : $this->host,
+            'username' => (isset($config['username'])) ? $config['username'] : $this->username,
+            'password' => (isset($config['password'])) ? $config['password'] : $this->password,
+            'port' => (isset($config['port'])) ? $config['port'] : $this->port
+        ];
 
-        if($this->ssl) {
-            curl_setopt($this->curl, CURLOPT_SSLVERSION, 3);
+        try{
+            $connectionResult = $this->client->connect(
+                $config['host'], $config['username'], $config['password'], $config['port']
+            );
+        } catch(\Exception $e) {
+            throw new ConnectionErrorException("voltdb connection failed", 500);
         }
-        if($this->cipher) {
-            curl_setopt($this->curl, CURLOPT_SSL_CIPHER_LIST, $this->cipher);
+        // throw exception
+        if(!$connectionResult) {
+            throw new ConnectionErrorException("voltdb connection refuse", 500);
         }
         return $this;
     }
 
-    /**
-     * GET Request
-     * @param array $params
-     * @return mixed|\stdClass
-     */
-    public function get(array $params)
-    {
-        $this->init();
-        $merge = array_merge($this->apiParams, $params);
-        $params = $this->buildQuery($merge);
-        curl_setopt($this->curl, CURLOPT_URL, "{$this->url}?{$params}");
-        return $this->exec();
-    }
 
     /**
-     * POST Request
-     * @param array $params
-     * @return mixed|\stdClass
+     * Get driver name.
+     * @return string
      */
-    public function post(array $params)
+    public function getDriverName()
     {
-        $this->init();
-        $merge = array_merge($this->apiParams, $params);
-        $params = $this->buildQuery($merge);
-        curl_setopt($this->curl, CURLOPT_POSTFIELDS, $params);
-        return $this->exec();
+        return 'voltdb';
     }
 
-    /**
-     * get SystemInformation / default OVERVIEW
-     * @param string $component
-     * @return mixed|\stdClass
-     */
-    public function info($component = "OVERVIEW")
-    {
-        $this->init();
-        $this->apiParams['Procedure'] = SystemProcedure::SYSTEM_INFO;
-        $this->apiParams['Parameters'] = [$component];
-        $params = $this->buildQuery($this->apiParams);
-        curl_setopt($this->curl, CURLOPT_URL, "{$this->url}?{$params}");
-        return $this->exec();
-    }
 
     /**
-     * buildQuery
+     * get VoltDB Client
      *
-     * json_encode "Parameters"
-     * @param array $array
-     * @return string
+     * @return VoltClient
      */
-    protected function buildQuery(array $array)
+    public function getClient()
     {
-        $result = [];
-        array_walk($array, function($value, $key) use (&$result) {
-                if("Parameters" === $key) {
-                    if(!is_null($value)) {
-                        $value = json_encode($value);
-                    }
-                }
-                $result[$key] = $value;
-            });
-        unset($array);
-        return http_build_query($result);
+        return $this->client;
     }
 
     /**
-     * curl_exec
-     * @return \stdClass|mixed
-     * @throws Exception\ApiClientErrorException
+     * use adhoc query
+     *
+     * voltdb is not support in the prepared statement(not support PDO driver)
+     * @param string $query
+     * @return array|void
+     *
+     * @see http://voltdb.com/docs/UsingVoltDB/sysprocadhoc.php
      */
-    private function exec()
+    public function select($query)
     {
-        $result = curl_exec($this->curl);
-        // curl error
-        if(!$result) {
-            throw new Exception\ApiClientErrorException(curl_error($this->curl), curl_errno($this->curl));
-        }
-        curl_close($this->curl);
-        $this->result = $this->parse->getResult(json_decode($result));
-        return $this;
+        $response = $this->client->invoke(SystemProcedure::AD_HOC, [$query]);
+        return $this->getResult($response);
     }
 
     /**
-     * @return string
+     * use adhoc query
+     *
+     * voltdb is not support in the prepared statement(not support PDO driver)
+     * @param string $query
+     * @return array|void
+     *
+     * @see http://voltdb.com/docs/UsingVoltDB/sysprocadhoc.php
      */
-    public function getUrl()
+    public function selectOne($query)
     {
-        return $this->url;
+        $response = $this->client->invoke(SystemProcedure::AD_HOC, [$query]);
+        $result = $this->getResult($response);
+        return (count($result)) ? $result[0] : null;
     }
 
     /**
+     * use stored procedure
+     *
+     * @param $name
+     * @param array $params
      * @return array
      */
-    public function getParam()
+    public function procedure($name, array $params = [])
     {
-        return $this->apiParams;
+        $response = $this->client->invoke($name, $params);
+        return $this->getResult($response);
     }
 
     /**
-     * @return \stdClass
+     * Asynchronous Stored Procedure Calls(resource)
+     * @param $name
+     * @param array $params
+     * @return $this
      */
-    public function getResult()
+    public function asyncProcedure($name, array $params = [])
     {
-        return $this->result;
+        $this->resource = $this->client->invokeAsync($name, $params);
+        return $this;
     }
 
     /**
-     * @todo
-     *
-     * @param string $cipher
-     * @return void
+     * A blocking call that will not return until VoltDB responds.
+     * @return boolean|mixed
      */
-    public function setCipher($cipher = null)
+    public function drain()
     {
-        if(!is_null($cipher)) {
-            $this->cipher = $cipher;
+        if(!is_null($this->resource)) {
+            $this->client->drain();
+            return $this;
         }
+        return false;
     }
 
     /**
-     * @todo
-     *
-     * @return string
+     * @return array|null
      */
-    public function getCipher()
+    public function asyncResult()
     {
-        return $this->cipher;
+        if(!is_null($this->resource)) {
+            $response = $this->client->getResponse($this->resource);
+            return $this->getResult($response);
+        }
+        return null;
+    }
+
+    /**
+     * @param $method
+     * @param $parameters
+     * @throws Exception\MethodNotSupportedException
+     */
+    public function __call($method, $parameters)
+    {
+        throw new MethodNotSupportedException("'{$method}' is not supported method", 500);
+    }
+
+    /**
+     * getResult
+     * @param VoltInvocationResponse $response
+     * @return array
+     * @throws Exception\ResponseErrorException
+     */
+    public function getResult(\VoltInvocationResponse $response = null)
+    {
+        $return = null;
+        if ($response === null) {
+            throw new ResponseErrorException("invoke had an error", 500);
+        }
+        $result = $this->parse->getResult($response);
+
+        /* Iterate through all returned tables */
+        while ($result->hasMoreResults()) {
+            $next = $result->nextResult();
+            /* Iterate through all rows in the table */
+            while ($next->hasMoreRows()) {
+                $return[] = $next->nextRow();
+            }
+        }
+        return $return;
+    }
+
+    /**
+     * DB connection configure
+     * @param null $host
+     * @param null $username
+     * @param null $password
+     * @param null $port
+     * @return mixed
+     */
+    public function setConfigure($host = null, $username = null, $password = null, $port = null)
+    {
+        $this->host = (!is_null($host)) ? $host : $this->host;
+        $this->username = (!is_null($username)) ? $username : $this->username;
+        $this->password = (!is_null($password)) ? $password : $this->password;
+        $this->port = (!is_null($port)) ? $port : $this->port;
+        return $this;
+    }
+
+    /**
+     * return configure
+     * @return array
+     */
+    public function getConfigure()
+    {
+        return [
+            'host' => $this->host,
+            'username' => $this->username,
+            'password' => $this->password,
+            'port' => $this->port,
+        ];
     }
 }

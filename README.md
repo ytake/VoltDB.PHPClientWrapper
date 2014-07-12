@@ -3,11 +3,11 @@ PHP VoltDB Client Wrapper
 [![Latest Stable Version](https://poser.pugx.org/ytake/voltdb-client-wrapper/v/stable.svg)](https://packagist.org/packages/ytake/voltdb-client-wrapper)
 [![Total Downloads](https://poser.pugx.org/ytake/voltdb-client-wrapper/downloads.svg)](https://packagist.org/packages/ytake/voltdb-client-wrapper)
 [![Latest Unstable Version](https://poser.pugx.org/ytake/voltdb-client-wrapper/v/unstable.svg)](https://packagist.org/packages/ytake/voltdb-client-wrapper) [![License](https://poser.pugx.org/ytake/voltdb-client-wrapper/license.svg)](https://packagist.org/packages/ytake/voltdb-client-wrapper)
-[![Build Status](https://travis-ci.org/ytake/VoltDB.PHPClientWrapper.svg)](https://travis-ci.org/ytake/VoltDB.PHPClientWrapper)
+[![Build Status](https://travis-ci.org/ytake/VoltDB.PHPClientWrapper.svg)](https://travis-ci.org/ytake/VoltDB.PHPClientWrapper)  
 client wrapper / json interface support.
 
 **required php-extension**  
-curl
+curl  
 [voltdb](https://github.com/VoltDB/voltdb-client-php)
 #install
 ```json
@@ -65,7 +65,7 @@ $client->request('http://localhost')->info("DEPLOYMENT")->getResult();
 $connection = new \Ytake\VoltDB\Client(new \VoltClient, new \Ytake\VoltDB\Parse);
 $connection->connect()->select("SELECT * FROM users");
 ```
-**not supported prepared statements**
+**not supported prepared statements**  
 JDBC driver(java) supports or stored procedure(DDL)
 
 ###Stored Procedure

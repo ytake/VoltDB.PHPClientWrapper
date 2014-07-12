@@ -7,111 +7,58 @@
 class ClientTest extends PHPUnit_Framework_TestCase
 {
     /** @var Ytake\VoltDB\Client */
-    protected $client;
+    protected $connection;
 
     public function setUp()
     {
-        $this->client = new \Ytake\VoltDB\Client(new \Ytake\VoltDB\Parse);
+        $this->connection = new \Ytake\VoltDB\Client(new \VoltClient, new \Ytake\VoltDB\Parse);
     }
 
-    public function testInstance()
+    /**
+     * @expectedException \Ytake\VoltDB\Exception\ConnectionErrorException
+     */
+    public function testConnection()
     {
-        $this->assertInstanceOf("Ytake\\VoltDB\\Client", $this->client);
-    }
+        $testHost = 'localhostt';
+        $client = $this->connection->getClient();
+        $this->assertInstanceOf('VoltClient', $client);
+        // instance
+        $this->assertInstanceOf('Ytake\VoltDB\Client', $this->connection->connect());
 
-    public function testInsert()
-    {
-        $result = $this->client->request('http://localhost')->get([
-                'Procedure' => 'addUser',
-                'Parameters' => [time(), 'test']
-            ])->getResult();
-        $this->assertInstanceOf('stdClass', $result);
+        /** connection Error throw */
+        $this->connection->setConfigure($testHost);
+        $this->connection->connect();
+
+        $configure = $this->connection->getConfigure();
+        $this->assertSame($configure['host'], $testHost);
     }
 
     /**
      * @expectedException \Ytake\VoltDB\Exception\StatusErrorException
      */
-    public function testOverlapInsert()
+    public function testProcedure()
     {
-        $this->client->request('http://localhost')->get([
-                'Procedure' => 'addUser',
-                'Parameters' => [1, 'test']
-            ]);
-        $this->client->request('http://localhost')->get([
-                'Procedure' => 'addUser',
-                'Parameters' => [1, 'test']
-            ]);
+        $this->connection->connect()->procedure("addUser", [time(), 'test']);
+        $procedure = $this->connection->connect()->procedure("allUser");
+        $this->assertInternalType('array', $procedure);
+        // throw Exception, allUser not Parameters
+        $this->assertInternalType('array', $this->connection->connect()->procedure("allUser", ['a']));
+    }
+
+    public function testAdHocQuery()
+    {
+        $this->connection->connect()->select("SELECT * FROM users");
+        $this->assertInternalType('array', $this->connection->connect()->select("SELECT * FROM users"));
     }
 
     /**
-     * @expectedException \Ytake\VoltDB\Exception\ApiClientErrorException
+     *
      */
-    public function testClientRequestGet()
+    public function testAsync()
     {
-        // url
-        $result = $this->client->request('http://localhost')->get([
-                'Procedure' => 'allUser',
-            ])->getResult();
-        $this->assertInstanceOf("stdClass", $result);
-        // url
-        $result = $this->client->request('localhost')->get([
-                'Procedure' => 'allUser',
-            ])->getResult();
-        $this->assertInstanceOf("stdClass", $result);
-        // ssl failed
-        $result = $this->client->request('https://localhost')->get([
-                'Procedure' => 'allUser',
-            ])->getResult();
-        $this->assertInstanceOf("stdClass", $result);
-        // ssl failed
-        $client = $this->client->request('localhost', 8080, true);
-        $this->assertSame("https://localhost:8080/api/1.0/", $client->getUrl());
-
-         $client->get([
-                'Procedure' => 'allUser',
-            ])->getResult();
-        $this->assertInstanceOf("stdClass", $result);
-    }
-
-    /**
-     * @expectedException \Ytake\VoltDB\Exception\ApiClientErrorException
-     */
-    public function testClientRequestPost()
-    {
-        // url
-        $result = $this->client->request('http://localhost')->post([
-                'Procedure' => 'allUser',
-            ])->getResult();
-        $this->assertInstanceOf("stdClass", $result);
-        // url
-        $result = $this->client->request('localhost')->post([
-                'Procedure' => 'allUser',
-            ])->getResult();
-        $this->assertInstanceOf("stdClass", $result);
-        // ssl failed
-        $result = $this->client->request('https://localhost')->post([
-                'Procedure' => 'allUser',
-            ])->getResult();
-        $this->assertInstanceOf("stdClass", $result);
-        // ssl failed
-        $client = $this->client->request('localhost', 8080, true);
-        $this->assertSame("https://localhost:8080/api/1.0/", $client->getUrl());
-
-        $client->post([
-                'Procedure' => 'allUser',
-            ])->getResult();
-        $this->assertInstanceOf("stdClass", $result);
-    }
-
-    /**
-     * get SystemInformation
-     */
-    public function testSystemInfo()
-    {
-        //
-        $result = $this->client->request('http://localhost')->info()->getResult();
-        $this->assertInstanceOf("stdClass", $result);
-        $result = $this->client->request('http://localhost')->info("DEPLOYMENT")->getResult();
-        $this->assertInstanceOf("stdClass", $result);
+        $async = $this->connection->connect()->asyncProcedure("allUser");
+        // blocking and get result
+        $result = $async->drain()->asyncResult();
+        $this->assertInternalType('array', $result);
     }
 } 

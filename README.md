@@ -1,17 +1,14 @@
 PHP VoltDB Client Wrapper
 =========================
-client wrapper / json interface support.
-
-[![Latest Stable Version](https://poser.pugx.org/ytake/voltdb-client-wrapper/v/stable.svg)](https://packagist.org/packages/ytake/voltdb-client-wrapper) [![Total Downloads](https://poser.pugx.org/ytake/voltdb-client-wrapper/downloads.svg)](https://packagist.org/packages/ytake/voltdb-client-wrapper) [![Latest Unstable Version](https://poser.pugx.org/ytake/voltdb-client-wrapper/v/unstable.svg)](https://packagist.org/packages/ytake/voltdb-client-wrapper) [![License](https://poser.pugx.org/ytake/voltdb-client-wrapper/license.svg)](https://packagist.org/packages/ytake/voltdb-client-wrapper)
+[![Latest Stable Version](https://poser.pugx.org/ytake/voltdb-client-wrapper/v/stable.svg)](https://packagist.org/packages/ytake/voltdb-client-wrapper)
+[![Total Downloads](https://poser.pugx.org/ytake/voltdb-client-wrapper/downloads.svg)](https://packagist.org/packages/ytake/voltdb-client-wrapper)
+[![Latest Unstable Version](https://poser.pugx.org/ytake/voltdb-client-wrapper/v/unstable.svg)](https://packagist.org/packages/ytake/voltdb-client-wrapper) [![License](https://poser.pugx.org/ytake/voltdb-client-wrapper/license.svg)](https://packagist.org/packages/ytake/voltdb-client-wrapper)
 [![Build Status](https://travis-ci.org/ytake/VoltDB.PHPClientWrapper.svg)](https://travis-ci.org/ytake/VoltDB.PHPClientWrapper)  
+client wrapper / json interface support.
 
 **required php-extension**  
 curl  
 [voltdb](https://github.com/VoltDB/voltdb-client-php)
-
-**future**  
-async
-
 #install
 ```json
     "require": {
@@ -25,7 +22,7 @@ async
 #usage
 ##VoltDB json API(simple)
 ```php
-$client = new \Ytake\VoltDB\Client(new \Ytake\VoltDB\Parse);
+$client = new \Ytake\VoltDB\HttpClient(new \Ytake\VoltDB\Parse);
 // get request
 $result = $client->request('http://localhost')->get(['Procedure' => 'allUser'])->getResult();
 // post request
@@ -53,6 +50,7 @@ same arguments
 // function-name
 'jsonp' => null
 ```
+
 ###get SystemInformation
 ```php
 // default "OVERVIEW"
@@ -64,16 +62,22 @@ $client->request('http://localhost')->info("DEPLOYMENT")->getResult();
 ##VoltClient wrapper
 ###AdHoc Queries
 ```php
-$connection = new \Ytake\VoltDB\Connection(new \Ytake\VoltDB\Parse);
-$connection->select("SELECT * FROM users")
+$connection = new \Ytake\VoltDB\Client(new \VoltClient, new \Ytake\VoltDB\Parse);
+$connection->connect()->select("SELECT * FROM users");
 ```
 **not supported prepared statements**  
-JDBC driver(java) supports  
-or stored procedure(DDL)
+JDBC driver(java) supports or stored procedure(DDL)
 
 ###Stored Procedure
 ```php
-$connection = new \Ytake\VoltDB\Connection(new \Ytake\VoltDB\Parse);
-$connection->procedure("Procedure-Name"));
+$connection = new \Ytake\VoltDB\Client(new \VoltClient, new \Ytake\VoltDB\Parse);
+$connection->connect()->procedure("Procedure-Name");
 ```
 
+###Async Stored Procedure
+```php
+$connection = new \Ytake\VoltDB\Client(new \VoltClient, new \Ytake\VoltDB\Parse);
+$async = $connection->connect()->asyncProcedure("allUser");
+// blocking and get result
+$result = $async->drain()->asyncResult();
+```

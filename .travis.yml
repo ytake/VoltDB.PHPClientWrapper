@@ -4,22 +4,18 @@ php:
   - 5.4
   - 5.5
   - 5.6
-  
-compiler:
-  - gcc-4.8
 
 before_script:
-  - git clone https://github.com/VoltDB/voltdb.git
-  - cd voltdb
-  - ant 
-  - cd ..
   - git clone -b noexceptions https://github.com/VoltDB/voltdb-client-cpp.git
   - cd voltdb-client-cpp
   - make
   - cd ..
   - git clone -b native https://github.com/VoltDB/voltdb-client-php.git
+  - cd voltdb-client-php
   - phpize
   - ./configure --with-voltdb=../voltdb-client-cpp
+  - make
+  - echo "extension=voltdb.so" > voltdb.ini && phpenv config-add voltdb.ini
   - curl -s http://getcomposer.org/installer | php
   - php composer.phar install --dev
 

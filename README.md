@@ -6,7 +6,7 @@ PHP VoltDB Client Wrapper
 [![Build Status](https://travis-ci.org/ytake/VoltDB.PHPClientWrapper.svg)](https://travis-ci.org/ytake/VoltDB.PHPClientWrapper)
 client wrapper / json interface support.
 
-**required php-extension**
+**required php-extension**  
 curl
 [voltdb](https://github.com/VoltDB/voltdb-client-php)
 
@@ -33,7 +33,7 @@ $result = $client->request('http://localhost')->post([
 ])->getResult();
 ```
 ###use parameters
-[JSON HTTP Interface](http://voltdb.com/docs/UsingVoltDB/ProgLangJson.php)
+[JSON HTTP Interface](http://voltdb.com/docs/UsingVoltDB/ProgLangJson.php)  
 same arguments
 ```php
 // procedure-name

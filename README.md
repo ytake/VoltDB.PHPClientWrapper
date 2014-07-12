@@ -9,7 +9,6 @@ client wrapper / json interface support.
 **required php-extension**  
 curl
 [voltdb](https://github.com/VoltDB/voltdb-client-php)
-
 #install
 ```json
     "require": {
@@ -67,8 +66,7 @@ $connection = new \Ytake\VoltDB\Client(new \VoltClient, new \Ytake\VoltDB\Parse)
 $connection->connect()->select("SELECT * FROM users");
 ```
 **not supported prepared statements**
-JDBC driver(java) supports
-or stored procedure(DDL)
+JDBC driver(java) supports or stored procedure(DDL)
 
 ###Stored Procedure
 ```php

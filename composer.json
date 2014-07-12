@@ -12,8 +12,7 @@
     "require": {
         "php": ">=5.4.0",
         "ext-curl": "*",
-        "ext-voltdb": "0.1",
-        "ytake/voltdb-client-wrapper": "*"
+        "ext-voltdb": "0.1"
     },
     "require-dev": {
         "phpunit/phpunit": "3.7.*"

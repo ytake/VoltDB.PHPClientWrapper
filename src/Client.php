@@ -119,7 +119,7 @@ class Client
      *
      * @see http://voltdb.com/docs/UsingVoltDB/sysprocadhoc.php
      */
-    public function select($query)
+    public function execute($query)
     {
         $response = $this->client->invoke(SystemProcedure::AD_HOC, [$query]);
         return $this->getResult($response);
@@ -134,7 +134,7 @@ class Client
      *
      * @see http://voltdb.com/docs/UsingVoltDB/sysprocadhoc.php
      */
-    public function selectOne($query)
+    public function executeOne($query)
     {
         $response = $this->client->invoke(SystemProcedure::AD_HOC, [$query]);
         $result = $this->getResult($response);

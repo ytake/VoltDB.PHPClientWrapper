@@ -15,8 +15,8 @@
     },
     "require-dev": {
         "phpunit/phpunit": "4.*",
-        "mockery/mockery": "0.9.1",
-        "satooshi/php-coveralls": "0.6.1"
+        "mockery/mockery": "0.9.*",
+        "satooshi/php-coveralls": "dev-master"
     },
     "autoload" :{
         "psr-4" :{
@@ -24,7 +24,7 @@
         }
     },
     "suggest": {
-        "ext-voltdb": "Required for VoltClient."
+        "ext-voltdb": "Required for VoltClient. use extension https://github.com/VoltDB/voltdb-client-php/tree/native"
     },
     "minimum-stability": "stable"
 }

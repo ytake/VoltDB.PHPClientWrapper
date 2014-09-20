@@ -9,6 +9,7 @@ compiler:
   - clang
   - gcc
 before_script:
+  - sudo apt-get install python-dev libevent-dev
   - git clone -b noexceptions https://github.com/VoltDB/voltdb-client-cpp.git
   - cd voltdb-client-cpp
   - make

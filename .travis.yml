@@ -17,7 +17,7 @@ before_script:
   - cd voltdb-client-php
   - phpize
   - ./configure --with-voltdb=../voltdb-client-cpp
-  - make
+  - sudo make
   - echo "extension=voltdb.so" > voltdb.ini && phpenv config-add voltdb.ini
   - curl -s http://getcomposer.org/installer | php
   - php composer.phar install --dev

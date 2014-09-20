@@ -1,6 +1,5 @@
 PHP VoltDB Client Wrapper
 =========================
-
 [![License](http://img.shields.io/packagist/l/ytake/voltdb-client-wrapper.svg?style=flat)](https://packagist.org/packages/ytake/voltdb-client-wrapper)
 [![Latest Version](http://img.shields.io/packagist/v/ytake/voltdb-client-wrapper.svg?style=flat)](https://packagist.org/packages/ytake/voltdb-client-wrapper)
 [![Total Downloads](http://img.shields.io/packagist/dt/ytake/voltdb-client-wrapper.svg?style=flat)](https://packagist.org/packages/ytake/voltdb-client-wrapper)

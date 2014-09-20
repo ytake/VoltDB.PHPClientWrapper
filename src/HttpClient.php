@@ -129,9 +129,7 @@ class HttpClient
      */
     public function get(array $params)
     {
-        $this->init();
-        $merge = array_merge($this->apiParams, $params);
-        $params = $this->buildQuery($merge);
+        $params = $this->preparedRequest($params);
         curl_setopt($this->curl, CURLOPT_URL, "{$this->url}?{$params}");
         return $this->exec();
     }
@@ -143,11 +141,21 @@ class HttpClient
      */
     public function post(array $params)
     {
-        $this->init();
-        $merge = array_merge($this->apiParams, $params);
-        $params = $this->buildQuery($merge);
+        $params = $this->preparedRequest($params);
         curl_setopt($this->curl, CURLOPT_POSTFIELDS, $params);
         return $this->exec();
+    }
+
+    /**
+     * prepared Request(curl)
+     * @access private
+     * @param array $params
+     * @return string
+     */
+    private function preparedRequest(array $params)
+    {
+        $merge = array_merge($this->apiParams, $params);
+        return $this->init()->buildQuery($merge);
     }
 
     /**

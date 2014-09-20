@@ -13,7 +13,7 @@ before_script:
   - cd voltdb-client-cpp
   - make
   - cd ..
-  - git clone -b master https://github.com/VoltDB/voltdb-client-php.git
+  - git clone -b native https://github.com/VoltDB/voltdb-client-php.git
   - cd voltdb-client-php
   - phpize
   - ./configure --with-voltdb=../voltdb-client-cpp

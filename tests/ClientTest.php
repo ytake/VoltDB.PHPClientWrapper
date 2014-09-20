@@ -47,8 +47,8 @@ class ClientTest extends PHPUnit_Framework_TestCase
 
     public function testAdHocQuery()
     {
-        $this->connection->connect()->select("SELECT * FROM users");
-        $this->assertInternalType('array', $this->connection->connect()->select("SELECT * FROM users"));
+        $this->connection->connect()->execute("SELECT * FROM users");
+        $this->assertInternalType('array', $this->connection->connect()->execute("SELECT * FROM users"));
     }
 
     /**

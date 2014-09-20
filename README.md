@@ -1,15 +1,23 @@
 PHP VoltDB Client Wrapper
 =========================
-[![Latest Stable Version](https://poser.pugx.org/ytake/voltdb-client-wrapper/v/stable.svg)](https://packagist.org/packages/ytake/voltdb-client-wrapper)
-[![Total Downloads](https://poser.pugx.org/ytake/voltdb-client-wrapper/downloads.svg)](https://packagist.org/packages/ytake/voltdb-client-wrapper)
-[![Latest Unstable Version](https://poser.pugx.org/ytake/voltdb-client-wrapper/v/unstable.svg)](https://packagist.org/packages/ytake/voltdb-client-wrapper) [![License](https://poser.pugx.org/ytake/voltdb-client-wrapper/license.svg)](https://packagist.org/packages/ytake/voltdb-client-wrapper)
-[![Build Status](https://travis-ci.org/ytake/VoltDB.PHPClientWrapper.svg)](https://travis-ci.org/ytake/VoltDB.PHPClientWrapper)  
-client wrapper / json interface support.
 
-**required php-extension**  
+[![License](http://img.shields.io/packagist/l/ytake/voltdb-client-wrapper.svg?style=flat)](https://packagist.org/packages/ytake/voltdb-client-wrapper)
+[![Latest Version](http://img.shields.io/packagist/v/ytake/voltdb-client-wrapper.svg?style=flat)](https://packagist.org/packages/ytake/voltdb-client-wrapper)
+[![Total Downloads](http://img.shields.io/packagist/dt/ytake/voltdb-client-wrapper.svg?style=flat)](https://packagist.org/packages/ytake/voltdb-client-wrapper)
+[![Dependency Status](https://www.versioneye.com/user/projects/541d94a53a1a2cd567000171/badge.svg?style=flat)](https://www.versioneye.com/user/projects/541d94a53a1a2cd567000171)
+
+[![Scrutinizer Code Quality](http://img.shields.io/scrutinizer/g/ytake/VoltDB.PHPClientWrapper.svg?style=flat)](https://scrutinizer-ci.com/g/ytake/VoltDB.PHPClientWrapper/?branch=master)
+[![Code Coverage](http://img.shields.io/scrutinizer/coverage/g/ytake/VoltDB.PHPClientWrapper/master.svg?style=flat)](https://scrutinizer-ci.com/g/ytake/VoltDB.PHPClientWrapper/?branch=master)
+[![Build Status](https://scrutinizer-ci.com/g/ytake/VoltDB.PHPClientWrapper/badges/build.png?b=master)](https://scrutinizer-ci.com/g/ytake/VoltDB.PHPClientWrapper/build-status/master)
+
+voltdb client wrapper / json interface support.
+
+**required extension**  
 curl  
-[voltdb](https://github.com/VoltDB/voltdb-client-php)
-#install
+**suggest**  
+[voltdb-client-php(native branch)](https://github.com/VoltDB/voltdb-client-php/tree/native)
+
+#Install
 ```json
     "require": {
         "php": ">=5.4.0",
@@ -19,7 +27,7 @@ curl
     },
 ```
 
-#usage
+#Usage
 ##VoltDB json API(simple)
 ```php
 $client = new \Ytake\VoltDB\HttpClient(new \Ytake\VoltDB\Parse);
@@ -63,7 +71,7 @@ $client->request('http://localhost')->info("DEPLOYMENT")->getResult();
 ###AdHoc Queries
 ```php
 $connection = new \Ytake\VoltDB\Client(new \VoltClient, new \Ytake\VoltDB\Parse);
-$connection->connect()->select("SELECT * FROM users");
+$connection->connect()->excute("SELECT * FROM users");
 ```
 **not supported prepared statements**  
 JDBC driver(java) supports or stored procedure(DDL)

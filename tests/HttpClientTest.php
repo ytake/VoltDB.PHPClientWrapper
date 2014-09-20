@@ -11,6 +11,7 @@ class HttpClientTest extends PHPUnit_Framework_TestCase
 
     public function setUp()
     {
+        parent::setUp();
         $this->client = new \Ytake\VoltDB\HttpClient(new \Ytake\VoltDB\Parse);
     }
 
@@ -23,7 +24,7 @@ class HttpClientTest extends PHPUnit_Framework_TestCase
     {
         $result = $this->client->request('http://localhost')->get([
                 'Procedure' => 'addUser',
-                'Parameters' => [time(), 'test']
+                'Parameters' => [rand(), 'test']
             ])->getResult();
         $this->assertInstanceOf('stdClass', $result);
     }
@@ -67,7 +68,7 @@ class HttpClientTest extends PHPUnit_Framework_TestCase
         $client = $this->client->request('localhost', 8080, true);
         $this->assertSame("https://localhost:8080/api/1.0/", $client->getUrl());
 
-         $client->get([
+        $client->get([
                 'Procedure' => 'allUser',
             ])->getResult();
         $this->assertInstanceOf("stdClass", $result);
@@ -113,5 +114,10 @@ class HttpClientTest extends PHPUnit_Framework_TestCase
         $this->assertInstanceOf("stdClass", $result);
         $result = $this->client->request('http://localhost')->info("DEPLOYMENT")->getResult();
         $this->assertInstanceOf("stdClass", $result);
+    }
+
+    public function testUrl()
+    {
+        $this->assertNull($this->client->getUrl());
     }
 } 

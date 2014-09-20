@@ -1,7 +1,7 @@
 {
     "name": "ytake/voltdb-client-wrapper",
     "description": "voltdb client wrapper",
-    "keywords": ["voltdb", "newsql", "rdbms", "api", "json"],
+    "keywords": ["voltdb", "newsql", "api", "json", "database"],
     "license": "MIT",
     "authors": [
         {
@@ -14,7 +14,9 @@
         "ext-curl": "*"
     },
     "require-dev": {
-        "phpunit/phpunit": "3.7.*"
+        "phpunit/phpunit": "4.*",
+        "mockery/mockery": "0.9.*",
+        "satooshi/php-coveralls": "dev-master"
     },
     "autoload" :{
         "psr-4" :{
@@ -22,7 +24,7 @@
         }
     },
     "suggest": {
-        "ext-voltdb": "Required for VoltClient."
+        "ext-voltdb": "Required for VoltClient. use extension https://github.com/VoltDB/voltdb-client-php/tree/native"
     },
     "minimum-stability": "stable"
 }

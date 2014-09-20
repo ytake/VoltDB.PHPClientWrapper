@@ -7,4 +7,3 @@ tests/schema/statement-plans
 tests/schema/voltdbroot
 tests/schema/catalog.jar
 tests/schema/catalog-report.html
-src/Connection.php

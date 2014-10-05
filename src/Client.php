@@ -172,11 +172,7 @@ class Client
      */
     public function drain()
     {
-        if(!is_null($this->resource)) {
-            $this->client->drain();
-            return $this;
-        }
-        return false;
+        return $this->client->drain();
     }
 
     /**

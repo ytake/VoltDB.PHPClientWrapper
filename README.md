@@ -1,6 +1,5 @@
 PHP VoltDB Client Wrapper
 =========================
-
 [![License](http://img.shields.io/packagist/l/ytake/voltdb-client-wrapper.svg?style=flat)](https://packagist.org/packages/ytake/voltdb-client-wrapper)
 [![Latest Version](http://img.shields.io/packagist/v/ytake/voltdb-client-wrapper.svg?style=flat)](https://packagist.org/packages/ytake/voltdb-client-wrapper)
 [![Total Downloads](http://img.shields.io/packagist/dt/ytake/voltdb-client-wrapper.svg?style=flat)](https://packagist.org/packages/ytake/voltdb-client-wrapper)
@@ -87,5 +86,6 @@ $connection->connect()->procedure("Procedure-Name");
 $connection = new \Ytake\VoltDB\Client(new \VoltClient, new \Ytake\VoltDB\Parse);
 $async = $connection->connect()->asyncProcedure("allUser");
 // blocking and get result
-$result = $async->drain()->asyncResult();
+$async->drain();
+$async->asyncResult();
 ```

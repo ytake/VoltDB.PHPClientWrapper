@@ -86,5 +86,6 @@ $connection->connect()->procedure("Procedure-Name");
 $connection = new \Ytake\VoltDB\Client(new \VoltClient, new \Ytake\VoltDB\Parse);
 $async = $connection->connect()->asyncProcedure("allUser");
 // blocking and get result
-$result = $async->drain()->asyncResult();
+$async->drain();
+$async->asyncResult();
 ```

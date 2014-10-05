@@ -58,7 +58,8 @@ class ClientTest extends PHPUnit_Framework_TestCase
     {
         $async = $this->connection->connect()->asyncProcedure("allUser");
         // blocking and get result
-        $result = $async->drain()->asyncResult();
+        $async->drain();
+        $result = $async->asyncResult();
         $this->assertInternalType('array', $result);
     }
 } 
